@@ -32,7 +32,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let configuration = ARImageTrackingConfiguration()
         if let imageToTrack = ARReferenceImage.referenceImages(inGroupNamed: "Pokemon Cards", bundle: Bundle.main) {
             configuration.trackingImages = imageToTrack
-            configuration.maximumNumberOfTrackedImages = 1
+            configuration.maximumNumberOfTrackedImages = 2
         }
 
         // Run the view's session
@@ -50,6 +50,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         let node = SCNNode()
         if let imageAnchor = anchor as? ARImageAnchor {
+            
             let plane = SCNPlane(
                 width: imageAnchor.referenceImage.physicalSize.width,
                 height: imageAnchor.referenceImage.physicalSize.height)
@@ -57,10 +58,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let planeNode = SCNNode(geometry: plane)
             planeNode.eulerAngles.x = -.pi / 2
             node.addChildNode(planeNode)
-            if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
-                if let pokeNode = pokeScene.rootNode.childNodes.first {
-                    pokeNode.eulerAngles.x = .pi / 2
-                    planeNode.addChildNode(pokeNode)
+            if imageAnchor.referenceImage.name == "eevee-card" {
+                if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
+                    if let pokeNode = pokeScene.rootNode.childNodes.first {
+                        pokeNode.eulerAngles.x = .pi / 2
+                        planeNode.addChildNode(pokeNode)
+                    }
+                }
+            }
+            if imageAnchor.referenceImage.name == "oddish-card" {
+                if let pokeScene = SCNScene(named: "art.scnassets/oddish.scn") {
+                    if let pokeNode = pokeScene.rootNode.childNodes.first {
+                        pokeNode.eulerAngles.x = .pi / 2
+                        planeNode.addChildNode(pokeNode)
+                    }
                 }
             }
         }
